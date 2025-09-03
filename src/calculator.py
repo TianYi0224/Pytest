@@ -1,3 +1,4 @@
+import sys
 import logging
 logger = logging.getLogger(__name__)
 
@@ -169,6 +170,45 @@ class Calculator:
             BS = int(Blk / PlaneNum)
         logger.info("BS:0x%x(%d)", BS, BS)
         self.BS_2_Blk(BS, PlaneNum, is6PAs4P)
+
+    '''
+    统计两个文件中bit位存在差异的数量,unit:bit
+    file1、file2:两个文件的路径
+    '''
+    def count_different_bits(self, file1, file2):
+        # 读取两个文件
+        with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
+            data1 = f1.read()
+            data2 = f2.read()
+        
+        # 确定最小长度
+        min_len = min(len(data1), len(data2))
+        total_bits = min_len * 8
+        
+        # 统计不同比特数
+        different_bits = 0
+        
+        # 比较相同长度部分
+        for i in range(min_len):
+            byte1 = data1[i]
+            byte2 = data2[i]
+            
+            # 比较每个比特，异或取出bit不一样的位置
+            xor_result = byte1 ^ byte2
+            # 计算不同比特数
+            different_bits += bin(xor_result).count('1')
+        
+        # 处理长度不同的情况
+        if len(data1) != len(data2):
+            # longer_data = data1 if len(data1) > len(data2) else data2
+            extra_bytes = abs(len(data1) - len(data2))
+            
+            # 多出的部分每个字节的所有比特都视为不同
+            different_bits += extra_bytes * 8
+            total_bits += extra_bytes * 8
+            logger.info("lenth diff %d byte %d bit.file1:%d file2::%d", extra_bytes, different_bits, len(data1), len(data2))
+        
+        return different_bits, total_bits
 
         
         

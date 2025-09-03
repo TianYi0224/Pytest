@@ -50,3 +50,12 @@ def test_N69R(calc):
     # calc.PAA_2_FAA(3, 0, 1)
     # calc.BS_2_Blk(0xd4, 6, 1)
     calc.Blk_2_BS(1236, 6, 1, 1)
+
+
+def test_CountDeffrentBit(calc):
+    srcfilePathA = "F:\\DelAny\\0903\\bypassFTL-SB-CacheReg-Right-offset0x08.bin"
+    srcfilePathB = "F:\\DelAny\\0903\\Page_RAW.bin"
+    srcfilePathC = "F:\\DelAny\\0903\\systemFW-SB-CacheReg-2-Left-offset0xf8.bin"
+    different_bits, total_bits = calc.count_different_bits(srcfilePathC, srcfilePathB)
+
+    logger.info("total_bits:%d different_bits:%d", total_bits, different_bits)
